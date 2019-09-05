@@ -4,9 +4,12 @@
 		<ul class="todo-list">
 			<li v-for="todo in filteredTodos"
 				class="todo"
-				:key="todo.id">
+				:key="todo.id"
+				:class="{completed: todo.completed}">
 				<todo-item
-					:todo="todo">
+					:todo="todo"
+					@remove-todo="removeTodo"
+					@done="done">
 				</todo-item>
 			</li>
 		</ul>
@@ -23,6 +26,14 @@ export default {
 	props: {
 		todos: Array,
 		filteredTodos: Array
+	},
+	methods: {
+		removeTodo(todo) {
+			this.$emit('remove-todo', todo);
+		},
+		done(todo, completed) {
+			this.$emit('done', todo, completed);
+		}
 	}
 }
 </script>
