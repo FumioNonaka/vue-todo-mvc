@@ -14,28 +14,59 @@
 			@remove-todo="removeTodo"
 			@done="done">
 		</todo-list>
+		<todo-controller
+			:todos="todos"
+			:remaining="remaining">
+		</todo-controller>
 	</section>
 </template>
 
 <script>
 import TodoInput from './components/TodoInput.vue';
 import TodoList from './components/TodoList.vue';
+import TodoController from './components/TodoController.vue';
 
+const STORAGE_KEY = 'todos-vuejs-2.6';
+const todoStorage = {
+	fetch() {
+		const todos = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+		todos.forEach(function(todo, index) {
+			todo.id = index;
+		});
+		todoStorage.uid = todos.length;
+		return todos;
+	},
+	save(todos) {
+		localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
+	}
+};
 export default {
 	name: 'app',
 	components: {
 		TodoInput,
-		TodoList
+		TodoList,
+		TodoController
 	},
 	data() {
 		return {
-			todos: [],
-			uid: 0
+			todos: todoStorage.fetch()
 		}
 	},
 	computed: {
 		filteredTodos() {
 			return this.todos;
+		},
+		remaining() {
+			const todos = this.getActive(this.todos);
+			return todos.length;
+		}
+	},
+	watch: {
+		todos: {
+			handler(todos) {
+				todoStorage.save(todos);
+			},
+			deep: true
 		}
 	},
 	methods: {
@@ -45,7 +76,7 @@ export default {
 				return;
 			}
 			this.todos.push({
-				id: this.uid++,
+				id: todoStorage.uid++,
 				title: newTodo,
 				completed: false
 			});
@@ -55,6 +86,11 @@ export default {
 		},
 		done(todo, completed) {
 			todo.completed = completed;
+		},
+		getActive(todos) {
+			return todos.filter((todo) =>
+				!todo.completed
+			);
 		}
 	}
 }
