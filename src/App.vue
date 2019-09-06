@@ -11,13 +11,16 @@
 		<todo-list
 			:todos="todos"
 			:filtered-todos="filteredTodos"
+			:allDone="allDone"
 			@remove-todo="removeTodo"
-			@done="done">
+			@done="done"
+			@allDone="onAllDone">
 		</todo-list>
 		<todo-controller
 			:todos="todos"
 			:remaining="remaining"
-			:visibility="visibility">
+			:visibility="visibility"
+			@removeCompleted="removeCompleted">
 		</todo-controller>
 	</section>
 </template>
@@ -52,7 +55,7 @@ const filters = {
 	},
 	completed(todos) {
 		return todos.filter((todo) =>
-			todo.completed
+			 todo.completed
 		);
 	}
 };
@@ -76,6 +79,16 @@ export default {
 		remaining() {
 			const todos = filters.active(this.todos);
 			return todos.length;
+		},
+		allDone: {
+			get() {
+				return this.remaining === 0;
+			},
+			set(value) {
+				this.todos.forEach((todo) =>
+					todo.completed = value
+				);
+			}
 		}
 	},
 	watch: {
@@ -110,6 +123,12 @@ export default {
 		onHashChange() {
 			const visibility = window.location.hash.replace(/#\/?/, '');
 			this.visibility = visibility;
+		},
+		onAllDone(done) {
+			this.allDone = done;
+		},
+		removeCompleted() {
+			this.todos = filters.active(this.todos);
 		}
 	}
 }
