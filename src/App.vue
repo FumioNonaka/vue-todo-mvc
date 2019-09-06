@@ -16,7 +16,8 @@
 		</todo-list>
 		<todo-controller
 			:todos="todos"
-			:remaining="remaining">
+			:remaining="remaining"
+			:visibility="visibility">
 		</todo-controller>
 	</section>
 </template>
@@ -40,6 +41,21 @@ const todoStorage = {
 		localStorage.setItem(STORAGE_KEY, JSON.stringify(todos));
 	}
 };
+const filters = {
+	all(todos) {
+		return todos;
+	},
+	active(todos) {
+		return todos.filter((todo) =>
+			!todo.completed
+		);
+	},
+	completed(todos) {
+		return todos.filter((todo) =>
+			todo.completed
+		);
+	}
+};
 export default {
 	name: 'app',
 	components: {
@@ -49,15 +65,16 @@ export default {
 	},
 	data() {
 		return {
-			todos: todoStorage.fetch()
+			todos: todoStorage.fetch(),
+			visibility: 'all'
 		}
 	},
 	computed: {
 		filteredTodos() {
-			return this.todos;
+			return filters[this.visibility](this.todos);
 		},
 		remaining() {
-			const todos = this.getActive(this.todos);
+			const todos = filters.active(this.todos);
 			return todos.length;
 		}
 	},
@@ -68,6 +85,9 @@ export default {
 			},
 			deep: true
 		}
+	},
+	mounted() {
+		window.addEventListener('hashchange', this.onHashChange);
 	},
 	methods: {
 		addTodo(todoTitle) {
@@ -87,10 +107,9 @@ export default {
 		done(todo, completed) {
 			todo.completed = completed;
 		},
-		getActive(todos) {
-			return todos.filter((todo) =>
-				!todo.completed
-			);
+		onHashChange() {
+			const visibility = window.location.hash.replace(/#\/?/, '');
+			this.visibility = visibility;
 		}
 	}
 }
