@@ -14,6 +14,11 @@
 			:class="{selected: visibility === 'completed'}">
 			Completed</a></li>
 		</ul>
+		<button class="clear-completed"
+			v-show="todos.length > remaining"
+			@click="removeCompleted">
+			Clear completed
+		</button>
 	</footer>
 </template>
 
@@ -29,6 +34,11 @@ export default {
 		todos: Array,
 		remaining: Number,
 		visibility: String
+	},
+	methods: {
+		removeCompleted() {
+			this.$emit('removeCompleted');
+		}
 	}
 }
 </script>
