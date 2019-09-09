@@ -18,6 +18,7 @@
 				</todo-item>
 				<todo-edit
 					:todo="todo"
+					:editedTodo="editedTodo"
 					@done-edit="doneEdit"
 					@cancel-edit="cancelEdit">
 				</todo-edit>

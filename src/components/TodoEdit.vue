@@ -1,16 +1,26 @@
 <template>
 	<input id="edit" class="edit" type="text"
+		v-todo-focus="todo == editedTodo"
 		:value="todo.title"
 		@input="onInput"
 		@keypress.enter="doneEdit"
-		@keyup.esc="cancelEdit">
+		@keyup.esc="cancelEdit"
+		@blur="cancelEdit">
 </template>
 
 <script>
 export default {
 	name: 'TodoEdit',
+	directives: {
+		['todo-focus'](element, binding) {
+			if (binding.value) {
+				element.focus();
+			}
+		}
+	},
 	props: {
-		todo: Object
+		todo: Object,
+		editedTodo: Object
 	},
 	data() {
 		return {
