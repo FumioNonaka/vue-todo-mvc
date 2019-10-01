@@ -5,11 +5,10 @@
 			:checked="allDone"
 			@change="onInput">
 		<label for="toggle-all"></label>
-		<ul class="todo-list">
+		<transition-group class="todo-list" name="todo-item" tag="ul">
 			<li v-for="todo in filteredTodos"
-				class="todo"
 				:key="todo.id"
-				:class="{completed: todo.completed, editing: todo == editedTodo}">
+				:class="['todo-item', {completed: todo.completed, editing: todo == editedTodo}]">
 				<todo-item
 					:todo="todo"
 					@remove-todo="removeTodo"
@@ -23,7 +22,7 @@
 					@cancel-edit="cancelEdit">
 				</todo-edit>
 			</li>
-		</ul>
+		</transition-group>
 	</section>
 </template>
 
@@ -81,5 +80,15 @@ export default {
 <style scoped>
 [v-cloak] {
 	display: none;
+}
+.todo-item {
+	transition: 1s;
+}
+.todo-item-enter, .todo-item-leave-to {
+	opacity: 0;
+	transform: translateX(200px);
+}
+.todo-item-leave-active {
+	position: absolute;
 }
 </style>
