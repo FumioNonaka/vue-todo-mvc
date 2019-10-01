@@ -1,7 +1,9 @@
 <template>
 	<section id="app" class="todoapp">
 		<header class="header">
-			<h1>todos</h1>
+			<transition appear name="todo-head">
+				<h1>todos</h1>
+			</transition>
 			<todo-input
 				class="new-todo" autofocus autocomplete="off"
 				placeholder="What needs to be done?"
@@ -136,4 +138,14 @@ export default {
 
 <style>
 @import url("https://unpkg.com/todomvc-app-css@2.2.0/index.css");
+</style>
+
+<style scoped>
+.todo-head-enter-active {
+	transition: 1s;
+}
+.todo-head-enter {
+	opacity: 0;
+	transform: translateY(-40px);
+}
 </style>
