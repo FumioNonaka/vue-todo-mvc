@@ -1,7 +1,7 @@
 <template>
 	<input
 		class="new-todo" autofocus autocomplete="off"
-		placeholder="What needs to be done?"
+		:placeholder="$t('message.placeholder')"
 		v-model="newTodo"
 		@keypress.enter="addTodo">
 </template>

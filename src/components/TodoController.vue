@@ -1,23 +1,25 @@
 <template>
 	<footer class="footer" v-show="todos.length" v-cloak>
 		<span class="todo-count">
-			<strong>{{remaining}}</strong> {{remaining | pluralize}} left
+			{{$tc("message.remaining", remaining, {count: remaining})}}
 		</span>
 		<ul class="filters">
-			<li><a href="#/all"
-			:class="{selected: visibility === 'all'}">
-			All</a></li>
-			<li><a href="#/active"
-			:class="{selected: visibility === 'active'}">
-			Active</a></li>
-			<li><a href="#/completed"
-			:class="{selected: visibility === 'completed'}">
-			Completed</a></li>
+			<li
+				v-for="(value, key) in filters"
+				:key="key"
+			>
+				<a
+					:href="'#/' + key"
+					:class="{selected: visibility === key}"
+				>
+					{{$t("message." + key)}}
+				</a>
+			</li>
 		</ul>
 		<button class="clear-completed"
 			v-show="todos.length > remaining"
 			@click="removeCompleted">
-			Clear completed
+			{{$t("message.archive")}}
 		</button>
 	</footer>
 </template>
@@ -25,15 +27,11 @@
 <script>
 export default {
 	name: 'TodoController',
-	filters: {
-		pluralize(n) {
-			return n === 1 ? 'item' : 'items';
-		}
-	},
 	props: {
 		todos: Array,
 		remaining: Number,
-		visibility: String
+		visibility: String,
+		filters: Object
 	},
 	methods: {
 		removeCompleted() {

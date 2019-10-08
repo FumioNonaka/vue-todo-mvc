@@ -5,8 +5,6 @@
 				<h1>todos</h1>
 			</transition>
 			<todo-input
-				class="new-todo" autofocus autocomplete="off"
-				placeholder="What needs to be done?"
 				@add-todo="addTodo">
 			</todo-input>
 		</header>
@@ -22,6 +20,7 @@
 			:todos="todos"
 			:remaining="remaining"
 			:visibility="visibility"
+			:filters="filters"
 			@removeCompleted="removeCompleted">
 		</todo-controller>
 	</section>
@@ -71,7 +70,8 @@ export default {
 	data() {
 		return {
 			todos: todoStorage.fetch(),
-			visibility: 'all'
+			visibility: 'all',
+			filters: filters
 		}
 	},
 	computed: {
